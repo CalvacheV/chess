@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Online</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 100px);
+            grid-template-rows: repeat(8, 100px);
+        }
+        .white {
+            background-color: #f0d9b5;
+        }
+        .black {
+            background-color: #b58863;
+        }
+        .square {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        img {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="board"></div>
+
+    <script>
+        // Configuración básica del tablero
+        const boardElement = document.getElementById('board');
+        const board = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ];
+
+        const pieces = {
+            'r': 'https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt60.png',
+            'n': 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt60.png',
+            'b': 'https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt60.png',
+            'q': 'https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt60.png',
+            'k': 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt60.png',
+            'p': 'https://upload.wikimedia.org/wikipedia/commons/c/cd/Chess_pdt60.png',
+            'R': 'https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt60.png',
+            'N': 'https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt60.png',
+            'B': 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt60.png',
+            'Q': 'https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt60.png',
+            'K': 'https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt60.png',
+            'P': 'https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt60.png'
+        };
+
+        // Crear tablero
+        function drawBoard() {
+            let isWhite = true;
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = 'square ' + (isWhite ? 'white' : 'black');
+                    isWhite = !isWhite;
+
+                    const piece = board[row][col];
+                    if (piece !== ' ') {
+                        const img = document.createElement('img');
+                        img.src = pieces[piece];
+                        img.draggable = true;
+                        img.addEventListener('dragstart', dragStart);
+                        square.appendChild(img);
+                    }
+                    square.addEventListener('dragover', dragOver);
+                    square.addEventListener('drop', drop);
+                    boardElement.appendChild(square);
+                }
+                isWhite = !isWhite;
+            }
+        }
+
+        let draggedPiece = null;
+
+        function dragStart(e) {
+            draggedPiece = e.target;
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            if (e.target.classList.contains('square')) {
+                e.target.appendChild(draggedPiece);
+            }
+        }
+
+        drawBoard();
+    </script>
+</body>
+</html>
